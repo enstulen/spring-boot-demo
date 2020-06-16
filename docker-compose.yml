@@ -1,0 +1,29 @@
+version: "3.7"
+
+#This file is only intended for running the project locally. Do not use this in production.
+services:
+  spring:
+    image: maven:3.6.3-jdk-11
+    environment:
+      - DATABASE_HOST=postgresContainer
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=demo
+      - DATABASE_USERNAME=postgresuser
+      - DATABASE_PASSWORD=postgrespassword
+      - ENVIRONMENT=localhost
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: ["./mvnw", "spring-boot:run"]
+    depends_on:
+      - postgresContainer
+    ports:
+      - 8080:8080
+  postgresContainer:
+    image: postgres
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_DB=demo
